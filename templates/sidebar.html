@@ -1,0 +1,81 @@
+{% load static %}
+{% load i18n %}
+<link
+      rel="stylesheet"
+      href="{%static 'css/dashboard.css'%}"
+      type="text/css"
+      media="screen"
+    />
+    <script>
+        function toggle() {
+            let x = document.getElementById("mySidebar").style.width;
+            let y = document.getElementById("main").style.marginLeft;
+            if (y=="250px"){
+                x="0";
+                document.getElementById("main").style.marginLeft = "0";
+            }
+            else{
+                x="250px";
+                document.getElementById("main").style.marginLeft = "250px";
+            }
+          }
+          
+    </script>
+    
+<div id="mySidebar" class="sidebar">
+<nav class="">
+  <div class="sidebar-sticky">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link {% if disp == 'profile' %} active {% endif %}" href="">
+          <span data-feather="home"></span>
+          {% trans "Profile" %} <span class="sr-only">(current)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if disp == 'search_doctor' %} active {% endif %}" href="">
+          {% trans "Search Doctor" %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if disp == 'chat' %} active {% endif %}" href="">
+          {% trans "Chats" %}
+        </a>
+      </li>
+    </ul>
+
+    <h6
+      class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted"
+    >
+      <span>{% trans "Reports" %}</span>
+      <a
+        class="d-flex align-items-center text-muted"
+        href="#"
+        aria-label="Add a new report"
+      >
+        <span data-feather="plus-circle"></span>
+      </a>
+    </h6>
+    <ul class="nav flex-column mb-2">
+      <li class="nav-item">
+        <a class="nav-link {% if disp == 'report_list' %} active {% endif %}" href="">
+          {% trans "Report List" %}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link {% if disp == 'report_upload' %} active {% endif %}" href="">
+          <span data-feather="file-text"></span>
+          {% trans "Upload Report" %}
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+</div>
+<div id="main">
+    <button class="openbtn" onclick="toggle()">&#9776;</button>
+    {% block content %} 
+
+      {% endblock %}
+</div>

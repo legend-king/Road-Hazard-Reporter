@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Road Hazard Reporter</title>
+    <link rel="stylesheet" href="{%static 'css/style.css'%}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <div class="siderbar" id="sidebar">
+        <div class="close-sidebar" id="close-sidebar">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        <ul>
+            
+            {%if user.is_authenticated%}
+            <li><a href="{%url 'home'%}">Submitted Reports</a></li>
+            <li><a href="{%url 'add-report'%}">Add Report</a></li>
+              <li><a href="{%url 'logout'%}">Logout</a></li>
+            {%else%}
+              <li><a href="{%url 'register'%}" >Register</a></li>
+              <li><a href="{%url 'login'%}">Login</a></li>
+            {%endif%}
+
+        </ul>
+    </div>
+    
+    <button class="open-sidebar" id="open-sidebar">
+        <i class="fa-solid fa-bars"></i>
+        <span class="sidebarText"></span>
+    </button>
+    <div id="check">
+      {%block content%}
+      {%endblock%}
+    </div>
+    
+
+    <script src="{%static 'js/script.js'%}"></script>
+</body>
+</html>

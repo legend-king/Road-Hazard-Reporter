@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for hazard_report in reports %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">{{ hazard_report.category }}</h5>
+    </div>
+    <div class="card-body">
+       
+        <p class="card-text"><b>Status:</b> <span style="color: {% if hazard_report.status == 'Pending' %}orange
+            {% elif hazard_report.status == 'In Progress' %}blue
+            {% elif hazard_report.status == 'Resolved' %}green
+            {% elif hazard_report.status == 'Closed' %}red
+            {%endif %}
+            ">{{ hazard_report.status }}</span></p>
+        <p class="card-text"><b>Pin Code:</b> {{ hazard_report.pin_code }}</p>
+        <p class="card-text"><b>Address:</b> {{ hazard_report.address }}</p>
+        <p class="card-text"><b>Description:</b> {{ hazard_report.description }}</p>
+        <p class="card-text"><b>Submitted by:</b> {{ hazard_report.user }}</p>
+        <img src="{{ hazard_report.photo.url }}" alt="Hazard Photo" class="img-fluid">
+        <p class="card-text"><b>Submitted on:</b> {{ hazard_report.timestamp }}</p>
+    </div>
+</div>
+{%empty%}
+No reports Submitted by you yet!
+{% endfor %}
+{% endblock content %}
+

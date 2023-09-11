@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <div class="row justify-content-center align-items-center vh-100">
+      <div class="col-md-9">
+        <h2 class="text-center">{{form_heading}}</h2>
+        <form method="post" class="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% if message %}
+      <ul class="alert alert-success">
+        {{message}}
+      </ul>
+    {% endif %}
+    {% if error %}
+      <ul class="alert alert-danger">
+        {{error}}
+      </ul>
+    {% endif %}
+    {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <ul class="alert alert-danger">
+            {% for error in field.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <br>
+    {% endfor %}
+
+    {% if form.non_field_errors %}
+          <ul class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <br>
+    
+        <button type="submit" class="btn btn-primary btn-block">{{button_text}}</button>
+  </form>
+</div>
+</div>
+</div>
+{% endblock %}
