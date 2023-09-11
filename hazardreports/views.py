@@ -44,7 +44,7 @@ def add_report(request):
             report.longitude = location_data.get('longitude', None)
             print(location_data)
             add = get_address_from_lat_lon(location_data.get('latitude', None),location_data.get('longitude', None))
-            report.pin_code = add.split(' ')[-2]
+            report.pin_code = add.split(' ')[-2].replace(",", "")
             report.address=add
             report.save()
             return redirect('home')
@@ -56,4 +56,13 @@ def add_report(request):
 def user_reports(request):
     user=request.user
     reports = HazardReport.objects.filter(user=user).order_by("-id")
-    return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'User Reports'})
+    return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'User Reports', "empty_message":'No reports uploaded by you yet'})
+
+@login_required(login_url='login')
+def location_reports(request):
+    ip = request.META.get('REMOTE_ADDR')
+    location_data = get_location_from_ip(ip)
+    add = get_address_from_lat_lon(location_data.get('latitude', None),location_data.get('longitude', None))
+    pin_code = add.split(' ')[-2].replace(",", "")
+    reports = HazardReport.objects.filter(pin_code__icontains=pin_code).order_by("-id")
+    return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'User Reports', "empty_message":'No Hazards in your Area.'})
