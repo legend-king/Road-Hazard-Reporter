@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+
 <style>
     :root {
         --background-color-light: #ffffff; /* Light theme background color */
@@ -68,6 +70,21 @@
             <p class="card-text"><b>Submitted by:</b> {{ hazard_report.user }}</p>
             <img src="{{ hazard_report.photo.url }}" alt="Hazard Photo" class="img-fluid">
             <p class="card-text"><b>Submitted on:</b> {{ hazard_report.timestamp }}</p>
+            {% if user.authority %}
+            <form method="post" action="{% url 'update-status' hazard_report.id %}">
+                {% csrf_token %}
+                <select name="new_status" class="form-control">
+                    <option value="In Progress">In Progress</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Closed">Closed</option>
+                </select>
+                <br>
+                <div style="display: flex;justify-content: center;">
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+                
+            </form>
+            {% endif %}
         </div>
         
     </div>

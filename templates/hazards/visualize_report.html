@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<h1>Category Pie Chart</h1>
+    <canvas id="categoryPieChart" width="400" height="400"></canvas>
+
+    <h1>Status Pie Chart</h1>
+    <canvas id="statusPieChart" width="400" height="400"></canvas>
+
+    <h1>Monthly Hazard Reports</h1>
+    <canvas id="lineChart" width="400" height="200"></canvas>
+
+    <script>
+        var categoryData = {{ category_data|safe }};
+        var categoryLabels = {{ category_labels|safe }};
+        
+        var ctx1 = document.getElementById('categoryPieChart').getContext('2d');
+        var categoryChart = new Chart(ctx1, {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryData,
+                    backgroundColor: ['red', 'yellow', 'blue', 'green', 'orange'],
+                }]
+            },
+        });
+        var statusData = {{ status_data|safe }};
+        var statusLabels = {{ status_labels|safe }};
+        
+        var ctx2 = document.getElementById('statusPieChart').getContext('2d');
+        var statusChart = new Chart(ctx2, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: ['orange', 'blue', 'green', 'red'],
+                }]
+            },
+        });
+        var ctx3 = document.getElementById('lineChart').getContext('2d');
+        var chart = new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: {{ monthly_report_labels|safe }},
+                datasets: [{
+                    label: 'Number of Reports',
+                    data: {{ monthly_report_data|safe }},
+                    fill: false,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock content %}

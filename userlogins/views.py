@@ -12,8 +12,8 @@ def register(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            authority = Authority(user=user, name=form.cleaned_data['name'])
-            authority.save()
+            # authority = Authority(user=user, name=form.cleaned_data['name'])
+            # authority.save()
             login(request, user)
             return redirect('home')
     else:

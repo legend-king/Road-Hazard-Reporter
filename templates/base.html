@@ -20,12 +20,15 @@
             <i class="fa-solid fa-xmark"></i>
         </div>
         <ul>
-            
-            {%if user.is_authenticated%}
-            <li><a href="{%url 'home'%}">Submitted Reports</a></li>
-            <li><a href="{%url 'add-report'%}">Add Report</a></li>
-            <li><a href="{%url 'location-reports'%}">Location Reports</a></li>
+            {%if user.is_authenticated and user.authority%}
+              <li><a href="{%url 'home'%}">Submitted Reports</a></li>
+              <li><a href="{%url 'visualize'%}">Reports Analysis</a></li>
               <li><a href="{%url 'logout'%}">Logout</a></li>
+            {%elif user.is_authenticated %}
+                <li><a href="{%url 'home'%}">Submitted Reports</a></li>
+                <li><a href="{%url 'add-report'%}">Add Report</a></li>
+                <li><a href="{%url 'location-reports'%}">Location Reports</a></li>
+                <li><a href="{%url 'logout'%}">Logout</a></li>
             {%else%}
               <li><a href="{%url 'register'%}" >Register</a></li>
               <li><a href="{%url 'login'%}">Login</a></li>

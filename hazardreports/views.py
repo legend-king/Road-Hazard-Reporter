@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import HazardReportForm
-from .models import HazardReport
+from .models import HazardReport, HazardCategory
 from django.contrib.auth.decorators import login_required
 import requests
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
 # Create your views here.
 
 from geopy.geocoders import Nominatim
@@ -55,8 +57,14 @@ def add_report(request):
 @login_required(login_url='login')
 def user_reports(request):
     user=request.user
-    reports = HazardReport.objects.filter(user=user).order_by("-id")
-    return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'User Reports', "empty_message":'No reports uploaded by you yet'})
+    try:
+        if user.authority:
+            reports = HazardReport.objects.filter().order_by("-id")
+        else:
+            reports = HazardReport.objects.filter(user=user).order_by("-id")
+    except:
+        reports = HazardReport.objects.filter(user=user).order_by("-id")
+    return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'All Reports', "empty_message":'No reports uploaded yet!'})
 
 @login_required(login_url='login')
 def location_reports(request):
@@ -66,3 +74,47 @@ def location_reports(request):
     pin_code = add.split(' ')[-2].replace(",", "")
     reports = HazardReport.objects.filter(pin_code__icontains=pin_code).order_by("-id")
     return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'User Reports', "empty_message":'No Hazards in your Area.'})
+
+@login_required(login_url='login')
+def update_status(request, report_id):
+    if request.method == 'POST':
+        new_status = request.POST.get('new_status')
+        report = HazardReport.objects.get(pk=report_id)
+        report.status = new_status
+        report.save()
+        return redirect('home')
+    else:
+        return redirect('home')
+    
+
+def generate_pie_chart_data(request):
+    # Retrieve all categories
+    categories = HazardCategory.objects.all()
+
+    # Count the number of reports for each category
+    category_data = []
+    category_labels = []
+    for category in categories:
+        report_count = HazardReport.objects.filter(category=category).count()
+        category_data.append(report_count)
+        category_labels.append(category.name)
+
+    status_options = ['Pending', 'In Progress', 'Resolved', 'Closed']
+    status_data = []
+    status_labels = []
+    for status in status_options:
+        report_count = HazardReport.objects.filter(status=status).count()
+        status_data.append(report_count)
+        status_labels.append(status)
+
+    monthly_report_counts = HazardReport.objects.annotate(
+        month=TruncMonth('timestamp')
+    ).values('month').annotate(report_count=Count('id')).order_by('month')
+
+    monthly_report_labels = [entry['month'].strftime('%Y-%m') for entry in monthly_report_counts]
+    monthly_report_data = [entry['report_count'] for entry in monthly_report_counts]
+
+    return render(request, 'hazards/visualize_report.html', {'category_data': category_data, 'category_labels': category_labels,
+                                                             'status_data':status_data, "status_labels":status_labels,
+                                                             'monthly_report_labels':monthly_report_labels,
+                                                             'monthly_report_data':monthly_report_data})
