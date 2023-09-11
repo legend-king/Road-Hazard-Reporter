@@ -55,5 +55,5 @@ def add_report(request):
 @login_required(login_url='login')
 def user_reports(request):
     user=request.user
-    reports = HazardReport.objects.filter(user=user)
+    reports = HazardReport.objects.filter(user=user).order_by("-id")
     return render(request, "hazards/report_view.html", {"reports":reports, 'heading':'User Reports'})
