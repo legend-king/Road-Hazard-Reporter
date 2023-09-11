@@ -2,22 +2,55 @@
 
 {% block content %}
 <style>
+    :root {
+        --background-color-light: #ffffff; /* Light theme background color */
+        --background-color-dark: #333333; /* Dark theme background color */
+        --text-color-light: #000000; /* Light theme text color */
+        --text-color-dark: #ffffff; /* Dark theme text color */
+        --border-color: #dddddd; /* Border color for both themes */
+        --header-background-color: #007bff; /* Card header background color */
+        --body-background-color: #f8f9fa; /* Card body background color */
+    }
+
+    /* Define CSS variables for card-specific styles */
+    :root {
+        --card-background-color: var(--background-color-light); /* Default to light theme */
+        --card-text-color: var(--text-color-light); /* Default to light theme */
+    }
+
+    /* Add a dark theme class to switch to dark theme styles */
+    .dark-theme {
+        --card-background-color: var(--background-color-dark);
+        --card-text-color: var(--text-color-dark);
+    }
+
     .container {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh; 
+        height: 100vh;
+        background-color: var(--background-color-light); /* Default to light theme */
     }
 
     .card {
-        border: 2px solid #000; 
+        border: 2px solid var(--border-color);
         max-width: 400px;
         width: 100%;
+        background-color: var(--card-background-color);
+        color: var(--card-text-color);
+    }
+
+    .card-header {
+        background-color: var(--header-background-color);
+        color: var(--card-text-color);
+    }
+
+    .card-body {
+        background-color: var(--body-background-color);
     }
 </style>
-<div class="container">
     {% for hazard_report in reports %}
-    <div class="card">
+    <div class="card dark-theme">
         <div class="card-header">
             <h5 class="card-title">{{ hazard_report.category }}</h5>
         </div>
@@ -43,6 +76,5 @@
     {%empty%}
     No reports Submitted by you yet!
     {% endfor %}
-</div>
 {% endblock content %}
 
